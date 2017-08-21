@@ -143,11 +143,16 @@ Zotero.Translate.Sandbox = {
 				if(translate._libraryID === false || translate._parentTranslator) {
 					translate.newItems.push(item);
 					if(translate._parentTranslator && Zotero.isFx && !Zotero.isBookmarklet) {
-						// Copy object so it is accessible to child translator
+						// Copy object so it is accessible to parent translator
 						item = translate._sandboxManager.copyObject(item);
 						item.complete = oldItem.complete;
 					}
-					return translate._runHandler("itemDone", item, item);
+					let maybePromise = translate._runHandler("itemDone", item, item);
+					if (maybePromise) {
+						return maybePromise.then(resolve);
+					}
+					resolve();
+					return;
 				}
 				
 				// We use this within the connector to keep track of items as they are saved
