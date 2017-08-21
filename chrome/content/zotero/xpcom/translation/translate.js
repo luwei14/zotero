@@ -149,9 +149,11 @@ Zotero.Translate.Sandbox = {
 					}
 					let maybePromise = translate._runHandler("itemDone", item, item);
 					if (maybePromise) {
-						return maybePromise.then(resolve);
+						return resolve ? maybePromise.then(resolve) : maybePromise;
 					}
-					resolve();
+					if (resolve) {
+						resolve();
+					}
 					return;
 				}
 				
